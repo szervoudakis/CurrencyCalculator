@@ -10,17 +10,20 @@ use App\Repository\CurrencyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\CacheInterface;
+use App\Services\CurrencyService;
 
 #[Route('/api/currencies')]
 class CurrencyController extends AbstractController
 {
     private CurrencyRepository $currencyRepo;
     private CacheInterface $cache;
+    private CurrencyService $currencyService;
     
-     public function __construct(CurrencyRepository $currencyRepo, CacheInterface $cache)
+     public function __construct(CurrencyRepository $currencyRepo, CacheInterface $cache,CurrencyService $currencyService)
     {
         $this->currencyRepo = $currencyRepo;
         $this->cache = $cache;
+        $this->currencyService = $currencyService;
     }
 
     #[Route('', name: 'currency_index', methods:['GET'])]
@@ -30,15 +33,9 @@ class CurrencyController extends AbstractController
         $page = max(1, (int)$request->query->get('page', 1));
         $limit = min(50, max(1, (int)$request->query->get('limit',10)));
         
-        $cacheKey=sprintf('currencies_page_%d_limit_%d', $page, $limit);
-        //cache results for 10 min
-        $result = $this->cache->get($cacheKey, function (ItemInterface $item) use ($page, $limit) {
-            $item->expiresAfter(600);
-            return $this->currencyRepo->findPaginated($page, $limit);
-        });
+        $result = $this->currencyService->getCurrencies($page,$limit);
 
-
-         $currencies = array_map(fn($c) => [
+        $currencies = array_map(fn($c) => [
             'id' => $c->getId(),
             'name' => $c->getName(),
             'code' => $c->getCode(),
@@ -65,11 +62,8 @@ class CurrencyController extends AbstractController
             return $this->json(['error' => 'Name and code are required'], 400);
         }
 
-        //add currency->>db
-        $currency = $this->currencyRepo->create($data['name'],$data['code']);
-
-        //clear cache
-        $this->cache->clear();  //clear all cache
+        //service to communicate with repo for creation currency and clear cache
+        $currency = $this->currencyService->createCurrency($data['name'],$data['code']);
 
         return $this->json([
             'message' => 'Currency created successfully',
@@ -79,24 +73,22 @@ class CurrencyController extends AbstractController
                 'code' => $currency->getCode(),
             ]
         ], 201);
-
     }
 
     #[Route('/{id}', name: 'currency_delete', methods:['DELETE'])]
-    public function delete(Currency $currency): JsonResponse{
+    public function delete(?Currency $currency): JsonResponse{
+       
         if(!$currency){
             return $this->json(['error' => 'Currency not found'], 404);
         }
-        $this->currencyRepo->delete($currency);
-
-        // Invalidate cache after delete
-        $this->cache->clear();
+        
+        $this->currencyService->deleteCurrency($currency);
 
         return $this->json(['message' => 'Currency deleted successfully']);
     }
 
     #[Route('/{id}', name: 'currency_update', methods:['PUT'])]
-    public function updateCurrency(Request $request, Currency $currency): JsonResponse{
+    public function updateCurrency(Request $request, ?Currency $currency): JsonResponse{
         
         if(!$currency){
            return $this->json(['error' => 'Currency not found'], 404); 
@@ -107,24 +99,18 @@ class CurrencyController extends AbstractController
             return $this->json(['error' => 'Name and code are required'], 400);
         }
 
-        if (isset($data['name'])) {
-            $currency->setName($data['name']);
-        }
-
-        if (isset($data['code'])) {
-            $currency->setCode(strtoupper($data['code']));
-        }
-
-        $this->currencyRepo->update($currency);
-
-        $this->cache->clear();
+        if (isset($data['name'])) $currency->setName($data['name']);
+            
+        if (isset($data['code'])) $currency->setCode(strtoupper($data['code']));
+        //service to communicate with repo and clear cache
+        $updated=$this->currencyService->updateCurrencies($currency);
 
         return $this->json([
             'message' => 'Currency updated successfully',
             'currency' => [
-                'id' => $currency->getId(),
-                'name' => $currency->getName(),
-                'code' => $currency->getCode(),
+                'id' =>  $updated->getId(),
+                'name' =>  $updated->getName(),
+                'code' =>  $updated->getCode(),
             ]
         ]);
     }
