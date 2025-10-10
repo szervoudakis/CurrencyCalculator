@@ -43,4 +43,15 @@ class ExchangeRateRepository extends ServiceEntityRepository
         $this->em->flush();
     }
 
+    public function findByCurrencies(int $baseId, int $targetId): ?ExchangeRate
+    {
+        return $this->createQueryBuilder('r')
+        ->where('r.baseCurrency = :base')
+        ->andWhere('r.targetCurrency = :target')
+        ->setParameter('base', $baseId)
+        ->setParameter('target', $targetId)
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
+
 }

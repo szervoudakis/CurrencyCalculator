@@ -77,4 +77,13 @@ class CurrencyRepository extends ServiceEntityRepository
             'total' => (int)$total
         ];
     }
+
+    //find if currency already exists
+    public function findCurrency(string $code): ?Currency{
+        return $this->createQueryBuilder('c')
+        ->where('UPPER(c.code) = :code')
+        ->setParameter('code', strtoupper($code))
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
 }

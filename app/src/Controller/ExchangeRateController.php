@@ -55,7 +55,7 @@ class ExchangeRateController extends AbstractController
                 'target' => $target->getCode(),
                 'value' => $rate->getRate(),
             ]
-        ], 201);
+        ], 201);//created suscessfully
     }
 
     #[Route('', name: 'exchange_rate_index' , methods:['GET'])]

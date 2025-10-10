@@ -62,6 +62,12 @@ class CurrencyController extends AbstractController
             return $this->json(['error' => 'Name and code are required'], 400);
         }
 
+        //check if currency exist
+        $currency = $this->currencyRepo->findCurrency($data['code']);
+        if ($currency) {
+            return $this->json(['error' => 'Currency already exists'], 409);
+        }
+
         //service to communicate with repo for creation currency and clear cache
         $currency = $this->currencyService->createCurrency($data['name'],$data['code']);
 
