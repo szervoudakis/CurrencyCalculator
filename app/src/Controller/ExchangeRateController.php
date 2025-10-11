@@ -23,7 +23,34 @@ class ExchangeRateController extends AbstractController
         $this->currencyRepo = $currencyRepo;
     }
 
+    #[Route ('/{id}' , name: 'exchange_rate_update', methods: ['PUT'])]
+    public function update(Request $request, ?ExchangeRate $exchangeRate): JsonResponse
+    {
+       if(!$exchangeRate){
+        return $this->json(['error' => 'Exchange rate not found'], 404);
+       }
+      
+       $data = json_decode($request->getContent(), true);
 
+       if (!isset($data['rate']) || !is_numeric($data['rate'])) {
+            return $this->json(['error' => 'Valid rate is required'], 400);
+       }
+
+       $exchangeRate->setRate((float) $data['rate']);
+       $this->rateRepo->update($exchangeRate);
+
+       //return the correct object in json
+           return $this->json([
+            'message' => 'Exchange rate updated successfully',
+                'rate' => [
+                    'id' => $exchangeRate->getId(),
+                    'base' => $exchangeRate->getBaseCurrency()->getCode(),
+                    'target' => $exchangeRate->getTargetCurrency()->getCode(),
+                    'value' => $exchangeRate->getRate(),
+                ]
+            ]);
+         
+    }
 
     #[Route('', name: 'exchange_rate_create', methods:['POST'])]
     public function create (Request $request) : JsonResponse
@@ -73,7 +100,7 @@ class ExchangeRateController extends AbstractController
         return $this->json($data);
     }
 
-     #[Route('/{id}', name: 'exchange_rate_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'exchange_rate_delete', methods: ['DELETE'])]
     public function delete(?ExchangeRate $rate): JsonResponse
     {
         if(!$rate){

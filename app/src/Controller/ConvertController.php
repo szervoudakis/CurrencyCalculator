@@ -30,7 +30,8 @@ class ConvertController extends AbstractController
     #[Route('/convert', name: 'currency_convert' , methods: ['GET'])]
     public function convert(Request $request): JsonResponse
     {
-        //take from url the parameters
+
+       //take from url the parameters
        $fromCode= strtoupper($request->query->get('from'));
        $toCode= strtoupper($request->query->get('to'));
        $amount= (float) $request->query->get('amount', 0);
