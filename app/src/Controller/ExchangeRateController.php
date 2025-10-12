@@ -66,6 +66,11 @@ class ExchangeRateController extends AbstractController
         if(!$base || !$target){
             return $this->json(['error' => 'Invalid currency IDs provided'], 404);
         }
+       //echo $data['baseCurrency'];
+       $rateEntity = $this->rateRepo->findByCurrencies($data['baseCurrency'], $data['targetCurrency']);
+       if($rateEntity){
+          return $this->json(['error' => 'Already exists'], 400);
+       }
 
         $rate = new ExchangeRate();
         $rate->setBaseCurrency($base);
