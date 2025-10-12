@@ -104,6 +104,25 @@ class ExchangeRateController extends AbstractController
 
         return $this->json($data);
     }
+    #[Route('/{id}', name: 'exchange_rate_show' , methods:['GET'])]
+    public function show(int $id): JsonResponse
+    {   
+        $rate=$this->rateRepo->find($id);
+        
+        if (!$rate) {
+            return $this->json([
+                'error' => sprintf('Exchange Currency with id %d not found', $id)
+            ], 404);
+        }
+
+        return $this->json([
+            'id' => $rate->getId(),
+            'rate' => $rate->getRate(),
+            'target'=> $rate->getTargetCurrency(),
+            'base'=> $rate->getBaseCurrency(),
+        ]);
+
+    }
 
     #[Route('/{id}', name: 'exchange_rate_delete', methods: ['DELETE'])]
     public function delete(?ExchangeRate $rate): JsonResponse

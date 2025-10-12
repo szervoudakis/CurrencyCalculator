@@ -33,9 +33,7 @@ export default function Home() {
          <a href="/exchange-rates">📈 Exchange Rates</a>
          <a href="/add-currency">➕ Add Currency</a>
          <a href="/add-exchange-rates">➕ Add Exchange Rates</a>
-         <a href="/update-currency">✏️ Update Currency</a>
          <a href="/convert">🔄 Convert</a>
-         
         </ul>
       </main>
     </div>

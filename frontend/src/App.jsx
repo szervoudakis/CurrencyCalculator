@@ -11,6 +11,9 @@ import Currencies from "./pages/Currencies";
 import ExchangeRates from "./pages/ExchangeRates";
 import AddCurrency from "./pages/AddCurrency";
 import AddExchangeRate from "./pages/AddExchangeRate";
+import EditCurrency from "./pages/EditCurrency";
+import EditExchangeRate from "./pages/EditExchangeRate";
+import Convert from "./pages/Convert";
 
 function App() {
   return (
@@ -45,12 +48,40 @@ function App() {
               <AddCurrency />
         </ProtectedRoute>}/>
 
+         <Route
+            path="/edit-currency/:id"
+            element={
+              <ProtectedRoute>
+                <EditCurrency />
+              </ProtectedRoute>
+            }
+          />
+
+
+
         <Route 
          path="/add-exchange-rates"
          element={<ProtectedRoute>
               <AddExchangeRate />
         </ProtectedRoute>}/>
 
+        <Route
+            path="/edit-exchange-rate/:id"
+            element={
+              <ProtectedRoute>
+                <EditExchangeRate />
+              </ProtectedRoute>
+            }
+          />
+        
+        <Route
+          path="/convert"
+          element={
+            <ProtectedRoute>
+              <Convert />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
     </BrowserRouter>

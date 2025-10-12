@@ -44,6 +44,8 @@ export default function Form({ fields = [], mode = "add", onSubmit }) {
             <input
               type={field.type || "text"}
               placeholder={field.placeholder || field.label}
+              defaultValue={field.defaultValue || ""}
+              disabled={field.disabled || false} 
               {...register(field.name, {
                 required: field.required && `${field.label} is required`,
                 minLength: field.minLength && {

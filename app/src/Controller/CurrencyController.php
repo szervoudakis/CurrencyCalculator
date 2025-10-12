@@ -54,6 +54,24 @@ class CurrencyController extends AbstractController
 
     }
 
+    #[Route('/{id}', name: 'currency_show', methods:['GET'])]
+    public function show(int $id): JsonResponse
+    {
+        $currency = $this->currencyRepo->find($id);
+        if (!$currency) {
+            return $this->json([
+                'error' => sprintf('Currency with id %d not found', $id)
+            ], 404);
+        }
+
+        return $this->json([
+            'id' => $currency->getId(),
+            'name' => $currency->getName(),
+            'code' => $currency->getCode()
+        ]);
+    }
+
+
     #[Route('', name: 'currency_create', methods:['POST'])]
     public function create (Request $request) : JsonResponse
     {

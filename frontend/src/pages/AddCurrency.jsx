@@ -25,7 +25,7 @@ export default function AddCurrency() {
       navigate("/currencies");
     } catch (err) {
       console.error("Error adding currency:", err);
-      alert("Failed to add currency.");
+      setMessage({text:"Failed to add currency.", type: "error"});
     }
   };
 

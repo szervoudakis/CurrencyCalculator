@@ -48,6 +48,7 @@ export default function ExchangeRates(){
           target: r.target,
           rate: r.rate,
         }))}
+         type="exchange"
       />
 
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "15px" }}>

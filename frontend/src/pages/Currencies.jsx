@@ -21,6 +21,7 @@ export default function Currencies() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCurrencies(res.data.data);
+        console.log(res.data.data);
       } catch (err) {
         console.error("Error fetching currencies:", err);
       } finally {
@@ -39,6 +40,7 @@ export default function Currencies() {
       <Table
         columns={["ID", "Name", "Code", "View"]}
         data={currencies}
+        type="currency"
       />
      <Button
           label="⬅ Back to Home"
