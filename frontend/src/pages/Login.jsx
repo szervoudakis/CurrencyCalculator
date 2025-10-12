@@ -1,22 +1,36 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import Button from "../components/Button.jsx";
 import Message from "../components/Message.jsx";
 import styles from "../styles/Login.module.css";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ text: "", type: "" });
 
+
     try {
       const res = await axios.post("/api/login", { username, password });
-      console.log("Login success:", res.data);
-      setMessage({ text: "Login successful!", type: "success" });
+      
+      const token = res.data.token; // JWT returns symfony
+      if(!token){
+         setMessage({text:"invalid response from server", type: "error"});
+         return ;
+      }
+      login(token, { username });
+      setTimeout(() => {
+      navigate("/home");
+    }, 800);
     } catch {
       setMessage({ text: "Invalid credentials", type: "error" });
     }
