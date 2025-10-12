@@ -29,10 +29,13 @@ export default function Home() {
       <main className={styles.main}>
         <h3>Manage Currencies</h3>
         <ul className={styles.menu}>
-         <a href="/currencies">💱 View All</a>
+         <a href="/currencies">💱 View Currencies</a>
+         <a href="/exchange-rates">📈 Exchange Rates</a>
          <a href="/add-currency">➕ Add Currency</a>
+         <a href="/add-exchange-rates">➕ Add Exchange Rates</a>
          <a href="/update-currency">✏️ Update Currency</a>
          <a href="/convert">🔄 Convert</a>
+         
         </ul>
       </main>
     </div>

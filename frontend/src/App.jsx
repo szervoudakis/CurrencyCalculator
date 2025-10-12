@@ -8,6 +8,9 @@ import Register from './pages/Register'
 import Home from './pages/Home'
 import ProtectedRoute from "./components/ProtectedRoute";
 import Currencies from "./pages/Currencies";
+import ExchangeRates from "./pages/ExchangeRates";
+import AddCurrency from "./pages/AddCurrency";
+import AddExchangeRate from "./pages/AddExchangeRate";
 
 function App() {
   return (
@@ -29,6 +32,26 @@ function App() {
         element={<ProtectedRoute>
               <Currencies />
         </ProtectedRoute>}/>
+
+       <Route 
+         path="/exchange-rates"
+         element={<ProtectedRoute>
+              <ExchangeRates />
+        </ProtectedRoute>}/>
+
+        <Route 
+         path="/add-currency"
+         element={<ProtectedRoute>
+              <AddCurrency />
+        </ProtectedRoute>}/>
+
+        <Route 
+         path="/add-exchange-rates"
+         element={<ProtectedRoute>
+              <AddExchangeRate />
+        </ProtectedRoute>}/>
+
+
       </Routes>
     </BrowserRouter>
   );

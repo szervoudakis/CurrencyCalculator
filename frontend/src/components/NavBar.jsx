@@ -10,7 +10,7 @@ function Navbar({ user, logout }) {
       </h2>
 
       <div className={styles.navRight}>
-        <Button label="Logout" variant="secondary" onClick={logout} />
+        <Button label="Logout" variant="danger" onClick={logout} />
       </div>
     </nav>
   );

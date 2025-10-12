@@ -6,12 +6,13 @@ const Button = ({ type = "button", label, onClick, variant = "primary" }) => {
   return (
     <button
       type={type}
-      className={`${styles.btn} ${styles[variant]}`}
+      className={`${styles.btn} ${styles[variant]} mt-3`}
       onClick={onClick}
     >
       {label}
     </button>
   );
 };
+
 
 export default Button;

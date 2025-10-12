@@ -1,28 +1,51 @@
-/* src/styles/Button.module.css */
-
 .btn {
-  padding: 10px 18px;
   border: none;
-  border-radius: 6px;
+  padding: 10px 18px;
+  border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s, transform 0.1s;
+  margin: 0 8px;
+  margin: 4px;
 }
 
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Χρώματα ανά variant */
 .primary {
   background-color: #0078ff;
   color: white;
 }
 
 .primary:hover {
-  background-color: #005fcc;
+  background-color: #0066d1;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.success:hover {
+  background-color: #218838;
+}
+
+.danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.danger:hover {
+  background-color: #b02a37;
 }
 
 .secondary {
-  background-color: #e0e0e0;
-  color: #333;
+  background-color: #6c757d;
+  color: white;
 }
 
 .secondary:hover {
-  background-color: #cfcfcf;
+  background-color: #5a6268;
 }
