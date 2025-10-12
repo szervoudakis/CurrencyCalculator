@@ -7,6 +7,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
 import ProtectedRoute from "./components/ProtectedRoute";
+import Currencies from "./pages/Currencies";
+
 function App() {
   return (
     <BrowserRouter>
@@ -21,6 +23,12 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route 
+        path="/currencies"
+        element={<ProtectedRoute>
+              <Currencies />
+        </ProtectedRoute>}/>
       </Routes>
     </BrowserRouter>
   );
