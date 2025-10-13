@@ -16,13 +16,11 @@ use App\Services\CurrencyService;
 class CurrencyController extends AbstractController
 {
     private CurrencyRepository $currencyRepo;
-    private CacheInterface $cache;
     private CurrencyService $currencyService;
     
-     public function __construct(CurrencyRepository $currencyRepo, CacheInterface $cache,CurrencyService $currencyService)
+     public function __construct(CurrencyRepository $currencyRepo,CurrencyService $currencyService)
     {
         $this->currencyRepo = $currencyRepo;
-        $this->cache = $cache;
         $this->currencyService = $currencyService;
     }
 

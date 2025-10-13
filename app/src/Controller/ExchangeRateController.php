@@ -9,49 +9,53 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Services\ExchangeRateService;
+use App\Message\UpdateExchangeRateMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[Route('/api/exchange-rates')]
 class ExchangeRateController extends AbstractController
 {
     private ExchangeRateRepository $rateRepo;
     private CurrencyRepository $currencyRepo;
+    private ExchangeRateService $rateService; 
 
-    public function __construct(ExchangeRateRepository $rateRepo, CurrencyRepository $currencyRepo)
+    public function __construct(ExchangeRateRepository $rateRepo, CurrencyRepository $currencyRepo, ExchangeRateService $rateService)
     {
         $this->rateRepo = $rateRepo;
         $this->currencyRepo = $currencyRepo;
+        $this->rateService = $rateService;
     }
 
-    #[Route ('/{id}' , name: 'exchange_rate_update', methods: ['PUT'])]
-    public function update(Request $request, ?ExchangeRate $exchangeRate): JsonResponse
-    {
-       if(!$exchangeRate){
-        return $this->json(['error' => 'Exchange rate not found'], 404);
-       }
-      
-       $data = json_decode($request->getContent(), true);
+    //GET request get all exchange rates
+    #[Route('', name: 'exchange_rate_index' , methods:['GET'])]
+    public function index(Request $request): JsonResponse
+    {   
+        $page = max(1, (int)$request->query->get('page', 1));
+        $limit = min(50, max(1, (int)$request->query->get('limit', 10)));
 
-       if (!isset($data['rate']) || !is_numeric($data['rate'])) {
-            return $this->json(['error' => 'Valid rate is required'], 400);
-       }
+        $result = $this->rateService->getRates($page, $limit);
 
-       $exchangeRate->setRate((float) $data['rate']);
-       $this->rateRepo->update($exchangeRate);
+        $rates = array_map(fn($r) => [
+            'id' => $r->getId(),
+            'base' => $r->getBaseCurrency()->getCode(),
+            'target' => $r->getTargetCurrency()->getCode(),
+            'rate' => $r->getRate(),
+        ], $result['items']);
 
-       //return the correct object in json
-           return $this->json([
-            'message' => 'Exchange rate updated successfully',
-                'rate' => [
-                    'id' => $exchangeRate->getId(),
-                    'base' => $exchangeRate->getBaseCurrency()->getCode(),
-                    'target' => $exchangeRate->getTargetCurrency()->getCode(),
-                    'value' => $exchangeRate->getRate(),
-                ]
-            ]);
-         
+        $total = $result['total'];
+        $pages = (int)ceil($total / $limit);
+
+        return $this->json([
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'pages' => $pages,
+            'data' => $rates,
+        ]);
     }
 
+     //CREATE post request (exchange rate)
     #[Route('', name: 'exchange_rate_create', methods:['POST'])]
     public function create (Request $request) : JsonResponse
     {
@@ -62,23 +66,17 @@ class ExchangeRateController extends AbstractController
 
         $base = $this->currencyRepo->find($data['baseCurrency']);
         $target = $this->currencyRepo->find($data['targetCurrency']);
-         
+        //check if base and target is correct
         if(!$base || !$target){
             return $this->json(['error' => 'Invalid currency IDs provided'], 404);
         }
-       //echo $data['baseCurrency'];
-       $rateEntity = $this->rateRepo->findByCurrencies($data['baseCurrency'], $data['targetCurrency']);
-       if($rateEntity){
-          return $this->json(['error' => 'Already exists'], 400);
-       }
 
-        $rate = new ExchangeRate();
-        $rate->setBaseCurrency($base);
-        $rate->setTargetCurrency($target);
-        $rate->setRate((float) $data['rate']);
-
-        $this->rateRepo->create($rate);
-
+        try {
+          $rate = $this->rateService->createRate($base, $target, (float)$data['rate']);
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()], 409);
+        }
+       
         return $this->json([
             'message' => 'Exchange rate created successfully',
             'rate' => [
@@ -90,20 +88,29 @@ class ExchangeRateController extends AbstractController
         ], 201);//created suscessfully
     }
 
-    #[Route('', name: 'exchange_rate_index' , methods:['GET'])]
-    public function index(): JsonResponse
-    {   
-        $rates=$this->rateRepo->findAll();
-        
-        $data = array_map(fn($r) => [
-            'id' => $r->getId(),
-            'base' => $r->getBaseCurrency()->getCode(),
-            'target' => $r->getTargetCurrency()->getCode(),
-            'rate' => $r->getRate(),
-        ], $rates);
+    //PUT request for update the rate
+    #[Route ('/{id}' , name: 'exchange_rate_update', methods: ['PUT'])]
+    public function update(Request $request, ?ExchangeRate $exchangeRate, MessageBusInterface $bus): JsonResponse
+    {
+       if(!$exchangeRate){
+        return $this->json(['error' => 'Exchange rate not found'], 404);
+       }
+      
+       $data = json_decode($request->getContent(), true);
 
-        return $this->json($data);
+       if (!isset($data['rate']) || !is_numeric($data['rate'])) {
+            return $this->json(['error' => 'Valid rate is required'], 400);
+       }
+
+        $bus->dispatch(new UpdateExchangeRateMessage($exchangeRate->getId(), (float)$data['rate']));
+        
+        //return the correct object in json
+        return $this->json([
+          'message' => 'Exchange rate updated successfully',
+        ]);
+         
     }
+      
     #[Route('/{id}', name: 'exchange_rate_show' , methods:['GET'])]
     public function show(int $id): JsonResponse
     {   
@@ -124,14 +131,16 @@ class ExchangeRateController extends AbstractController
 
     }
 
+
+    //delete specific exchange currency rate
     #[Route('/{id}', name: 'exchange_rate_delete', methods: ['DELETE'])]
-    public function delete(?ExchangeRate $rate): JsonResponse
+    public function delete(?ExchangeRate $exchangeRate): JsonResponse
     {
-        if(!$rate){
-            return $this->json(['error' => 'Exchange Rate not found'], 404);
+        if (!$exchangeRate) {
+            return $this->json(['error' => 'Exchange rate not found'], 404);
         }
 
-        $this->rateRepo->delete($rate);
+        $this->rateService->deleteRate($exchangeRate);
         return $this->json(['message' => 'Exchange rate deleted successfully']);
     }
 }

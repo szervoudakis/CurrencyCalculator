@@ -20,7 +20,7 @@ export default function ExchangeRates(){
         const res = await axios.get("http://localhost:8080/api/exchange-rates", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setRates(res.data);
+        setRates(res.data.data);
       } catch (err) {
         console.error("Error fetching exchange rates:", err);
       } finally {
@@ -37,8 +37,6 @@ export default function ExchangeRates(){
     <div>
       <Navbar user={user} logout={logout} />
       <h2 style={{ textAlign: "center", marginTop: "20px" }}>Exchange Rates</h2>
-
-     
 
       <Table
         columns={["ID", "Base", "Target", "Rate"]}

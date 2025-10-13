@@ -54,4 +54,28 @@ class ExchangeRateRepository extends ServiceEntityRepository
         ->getOneOrNullResult();
     }
 
+    public function findPaginated(int $page, int $limit): array
+    {
+        $offset = ($page - 1) * $limit;
+
+        $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.baseCurrency', 'base')
+            ->addSelect('base')
+            ->leftJoin('r.targetCurrency', 'target')
+            ->addSelect('target')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->orderBy('r.id', 'ASC');
+
+        $items = $qb->getQuery()->getResult();
+        $total = $this->count([]);
+
+        return [
+            'items' => $items,
+            'total' => $total,
+        ];
+    }
+
+    
+
 }
