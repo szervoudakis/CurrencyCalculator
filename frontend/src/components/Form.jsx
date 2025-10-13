@@ -23,7 +23,7 @@ export default function Form({ fields = [], mode = "add", onSubmit }) {
 
       {fields.map((field) => (
         <div key={field.name} className={styles.fieldGroup}>
-          {/* Αν το field είναι dropdown */}
+          {/* If field is dropdown */}
           {field.type === "select" ? (
             <select
               {...register(field.name, {
@@ -43,6 +43,7 @@ export default function Form({ fields = [], mode = "add", onSubmit }) {
           ) : (
             <input
               type={field.type || "text"}
+              step={field.step || ""} 
               placeholder={field.placeholder || field.label}
               defaultValue={field.defaultValue || ""}
               disabled={field.disabled || false} 

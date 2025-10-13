@@ -75,6 +75,7 @@ export default function EditExchangeRate() {
       label: "Exchange Rate",
       type: "number",
       required: true,
+      step:"0.1",
       defaultValue: exchangeRate.rate,
       validate: (value) =>
         parseFloat(value) > 0 || "Rate must be greater than 0",
