@@ -6,7 +6,7 @@ import Navbar from "../components/NavBar.jsx";
 import Loader  from "../components/Loader.jsx";
 import Button from "../components/Button.jsx";
 import {useNavigate} from "react-router-dom";
-
+import { getCurrencies } from "../services/currencyService.jsx";
 
 export default function Currencies() {
   const [currencies, setCurrencies] = useState([]);
@@ -17,11 +17,9 @@ export default function Currencies() {
   useEffect(() => {
     const fetchCurrencies = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/currencies", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCurrencies(res.data.data);
-        console.log(res.data.data);
+        const res = await getCurrencies(token);
+        setCurrencies(res.data);
+        //console.log(res.data.data);
       } catch (err) {
         console.error("Error fetching currencies:", err);
       } finally {

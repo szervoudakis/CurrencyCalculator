@@ -6,6 +6,7 @@ import Form from "../components/Form.jsx";
 import Button from "../components/Button.jsx";
 import Message from "../components/Message.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
+import { deleteCurrency, getCurrencyById, updateCurrency } from "../services/currencyService.jsx";
 
 export default function EditCurrency() {
   const { token, user, logout } = useContext(AuthContext);
@@ -16,14 +17,12 @@ export default function EditCurrency() {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch currency by ID
+  // Fetch currency by ID function
   useEffect(() => {
     const fetchCurrency = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/currencies/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCurrency(res.data);
+        const data = await getCurrencyById(id,token);
+        setCurrency(data);
       } catch (err) {
         console.error("Error fetching currency:", err);
         setMessage({ text: "Failed to load currency.", type: "error" });
@@ -34,16 +33,10 @@ export default function EditCurrency() {
     fetchCurrency();
   }, [id, token]);
 
-  // 🔹 Update currency
+  //Update currency function
   const handleUpdate = async (data) => {
     try {
-      await axios.put(
-        `http://localhost:8080/api/currencies/${id}`,
-        data,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await updateCurrency(id,data,token);
       setMessage({ text: "Currency updated successfully!", type: "success" });
       setTimeout(() => navigate("/currencies"), 1000);
     } catch (err) {
@@ -52,14 +45,12 @@ export default function EditCurrency() {
     }
   };
 
-  // 🔹 Delete currency
+  //Delete currency function
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this currency?")) return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/currencies/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await deleteCurrency(id,token);
       alert("Currency deleted successfully!");
       navigate("/currencies");
     } catch (err) {
@@ -71,7 +62,7 @@ export default function EditCurrency() {
   if (loading) return <p>Loading currency data...</p>;
   if (!currency) return <p>Currency not found.</p>;
 
-  // 🔹 Pre-fill form fields
+  //Pre-fill form fields
   const fields = [
     {
       name: "name",

@@ -2,7 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import Button from "../components/Button.jsx";
 import Message from "../components/Message.jsx";
-import styles from "../styles/Login.module.css"; //we use the same css for login
+import styles from "../styles/Login.module.css"; //we use the same css from login
+import { registerUser } from "../services/authService.jsx";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -19,10 +20,8 @@ export default function Register() {
     }
 
     try {
-      const res = await axios.post("/api/register", { username, password });
+      const data = registerUser(username, password);
       setMessage({ text: "Registration successful!", type: "success" });
-      console.log("Registered:", res.data);
-
       setTimeout(() => {
         window.location.href = "/";
       }, 1500);
