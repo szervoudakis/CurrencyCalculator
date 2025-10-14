@@ -59,34 +59,18 @@ docker compose up --build
 ###  3️⃣ Backend setup
 
 docker exec -it symfony_php bash
+
 composer install
+
 php bin/console doctrine:migrations:migrate
 
 -------------------------------------------------------------------
 ###  4️⃣ Frontend setup
 
 docker exec -it react_frontend bash
+
 npm install
 
 -------------------------------------------------------------------
 
-### 🧩 API Overview
 
-Endpoint	Method	Description	Auth Required
-/api/login	POST	User login	❌
-/api/register	POST	User registration	❌
-/api/currencies	GET	List currencies	✅
-/api/currencies	POST	Create currency	✅
-/api/exchange-rates	GET	List exchange rates	✅
-/api/convert	GET	Convert currency	✅
-
-### 👤 Authentication
-
-The API uses JWT tokens.
-After logging in, the token is stored in the browser and automatically attached to protected requests.
-
-### 🧪 Testing
-
-Run backend tests with:
-
-php bin/phpunit
