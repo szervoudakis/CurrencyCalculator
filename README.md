@@ -45,21 +45,21 @@ It allows users to register, log in, and manage currencies and exchange rates se
 ## ⚙️ Setup Instructions
 
 ### 1️⃣ Clone the repository
-```bash
+
 git clone https://github.com/your-username/currency-calculator.git
 cd currency-calculator
-
-2️⃣ Start Docker containers
+------------------------------------------------------------------
+###  2️⃣ Start Docker containers
 
 docker compose up --build
-
-3️⃣ Backend setup
+------------------------------------------------------------------
+###  3️⃣ Backend setup
 
 docker exec -it symfony_php bash
 composer install
 php bin/console doctrine:migrations:migrate
-
-4️⃣ Frontend setup
+-------------------------------------------------------------------
+###  4️⃣ Frontend setup
 docker exec -it react_frontend bash
 npm install
 
