@@ -5,17 +5,7 @@ import viteLogo from '/vite.svg'
 import { lazy, Suspense } from "react";
 import './App.css'
 import Loader from "./components/Loader.jsx";
-// import Login from './pages/Login'
-// import Register from './pages/Register'
-// import Home from './pages/Home'
 import ProtectedRoute from "./components/ProtectedRoute";
-// import Currencies from "./pages/Currencies";
-// import ExchangeRates from "./pages/ExchangeRates";
-// import AddCurrency from "./pages/AddCurrency";
-// import AddExchangeRate from "./pages/AddExchangeRate";
-// import EditCurrency from "./pages/EditCurrency";
-// import EditExchangeRate from "./pages/EditExchangeRate";
-// import Convert from "./pages/Convert";
 
 // Lazy imports for pages
 const Login = lazy(() => import("./pages/Login.jsx"));
@@ -28,7 +18,6 @@ const AddExchangeRate = lazy(() => import("./pages/AddExchangeRate.jsx"));
 const EditCurrency = lazy(() => import("./pages/EditCurrency.jsx"));
 const EditExchangeRate = lazy(() => import("./pages/EditExchangeRate.jsx"));
 const Convert = lazy(() => import("./pages/Convert.jsx"));
-
 
 function App() {
   return (

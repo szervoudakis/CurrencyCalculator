@@ -40,6 +40,7 @@ export default function AddExchangeRate() {
       name: "rate",
       label: "Exchange Rate",
       type: "number",
+      step:"0.01",
       required: true,
       validate: (value) =>
         parseFloat(value) > 0 || "Rate must be greater than 0",
