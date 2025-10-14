@@ -58,6 +58,7 @@ class ExchangeRateService
 
     public function updateRate(ExchangeRate $exchangeRate,float $newRate): ExchangeRate
     {
+        //setRate because this function executed UpdateExchangeRateMessage 
         $exchangeRate->setRate($newRate);
         $this->em->persist($exchangeRate);
         $this->em->flush();

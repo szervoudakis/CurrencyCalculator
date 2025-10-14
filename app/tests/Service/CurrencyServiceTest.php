@@ -25,6 +25,7 @@ class CurrencyServiceTest extends TestCase
 
     public function testCreateCurrency(): void
     {
+        //create instance for currency
         $currency = new Currency();
         $currency->setName('Euro');
         $currency->setCode('EUR');

@@ -7,27 +7,33 @@ use App\Entity\User;
 
 class CurrencyControllerTest extends WebTestCase
 {
+
+    protected static function getKernelClass(): string
+    {
+        return \App\Kernel::class;
+    }
+
     public function testGetCurrencies()
     {
         $client = static::createClient();
 
-        // Πάρε container
+        
         $container = static::getContainer();
 
-        // Δημιούργησε έναν fake χρήστη για test
+        //create fake user
         $user = new User();
-        $user->setUsername('testuser');
+        $user->setUsername('testuser2');
         $user->setPassword('password');
 
         $em = $container->get('doctrine')->getManager();
         $em->persist($user);
         $em->flush();
 
-        // Δημιούργησε JWT token
+        // create JWT token
         $jwtManager = $container->get('lexik_jwt_authentication.jwt_manager');
         $token = $jwtManager->create($user);
 
-        // Κάνε request με Authorization header
+        // create request with Authorization header
         $client->request('GET', '/api/currencies', [], [], [
             'HTTP_Authorization' => 'Bearer ' . $token,
         ]);

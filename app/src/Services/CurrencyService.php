@@ -21,7 +21,7 @@ class CurrencyService{
 
     //retrun currencies with pagination
     public function getCurrencies(int $page = 1, int $limit = 10):array{
-
+       //every page has specific cacheKey
        $cacheKey = sprintf('currencies_page_%d_limit_%d', $page, $limit);
 
         return $this->cache->get($cacheKey, function (ItemInterface $item) use ($page, $limit) {

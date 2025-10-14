@@ -41,8 +41,6 @@ class ConvertController extends AbstractController
           return $this->json(['error' => 'Invalid parameters. Example: /api/convert?from=EUR&to=USD&amount=100'], 400);
        }
 
-
-       //to do cache
        $fromCurrency = $this->currencyRepo->findCurrency($fromCode);
        $toCurrency = $this->currencyRepo->findCurrency($toCode);
        //input validation to currency 
@@ -62,13 +60,12 @@ class ConvertController extends AbstractController
 
        $converted = $amount * $rateEntity->getRate();
 
-
        //return object
        return $this->json([
-                'from' => $fromCode,
-                'to' => $toCode,
-                'rate' => $rateEntity->getRate(),
-                'amount' => $amount,
-                'converted' => round($converted, 4)]);
+        'from' => $fromCode,
+        'to' => $toCode,
+        'rate' => $rateEntity->getRate(),
+        'amount' => $amount,
+        'converted' => round($converted, 4)]);
     }
 }

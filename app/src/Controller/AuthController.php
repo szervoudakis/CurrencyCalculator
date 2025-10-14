@@ -37,7 +37,6 @@ class AuthController extends AbstractController
         }
         
         //if user already exist send json message
-
         $existing = $em->getRepository(User::class)->findOneBy(['username' => $username]);
         if($existing){
         return $this->json(['error' => 'User already exist in db!!'], 400);

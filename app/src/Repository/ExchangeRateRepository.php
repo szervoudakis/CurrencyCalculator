@@ -42,7 +42,7 @@ class ExchangeRateRepository extends ServiceEntityRepository
         $this->em->remove($rate);
         $this->em->flush();
     }
-
+    //check if base and target currency exists
     public function findByCurrencies(int $baseId, int $targetId): ?ExchangeRate
     {
         return $this->createQueryBuilder('r')
@@ -53,15 +53,15 @@ class ExchangeRateRepository extends ServiceEntityRepository
         ->getQuery()
         ->getOneOrNullResult();
     }
-
+    //pagination for exchanges
     public function findPaginated(int $page, int $limit): array
     {
         $offset = ($page - 1) * $limit;
 
         $qb = $this->createQueryBuilder('r')
-            ->leftJoin('r.baseCurrency', 'base')
+            ->leftJoin('r.baseCurrency', 'base')  //we want to take the basecurrency value 
             ->addSelect('base')
-            ->leftJoin('r.targetCurrency', 'target')
+            ->leftJoin('r.targetCurrency', 'target') //we want to take the targetcurrency value
             ->addSelect('target')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
