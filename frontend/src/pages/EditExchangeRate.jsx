@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import Message from "../components/Message.jsx";
 import Button from "../components/Button.jsx";
-import { getExchangeRateById, updateExchangeRate } from "../services/exchangeRateService.jsx";
+import { deleteExchangeRate, getExchangeRateById, updateExchangeRate } from "../services/exchangeRateService.jsx";
 
 export default function EditExchangeRate() {
   const { token, user, logout } = useContext(AuthContext);
@@ -43,6 +43,21 @@ export default function EditExchangeRate() {
       console.error("Error updating exchange rate:", err);
       setMessage({ text: "Failed to update exchange rate.", type: "error" });
     }
+  };
+
+  const handleDelete = async () => {
+      if (!window.confirm("Are you sure you want to delete this exchange rate?")) return;
+  
+      try {
+        await deleteExchangeRate(id,token);
+        // alert("Exchange Rate deleted successfully!");
+        setMessage({ text: "Exchange Rate deleted successfully!", type: "success" });
+        navigate("/exchange-rates");
+      } catch (err) {
+        console.error("Error deleting currency:", err);
+        // alert("Failed to delete currency.");
+        setMessage({ text: "Failed to delete currency.", type: "error" });
+      }
   };
 
   if (loading) return <p>Loading exchange rate...</p>;
@@ -86,6 +101,12 @@ export default function EditExchangeRate() {
           label="Back to Exchange Rates"
           variant="secondary"
           onClick={() => navigate("/exchange-rates")}
+        />
+
+        <Button
+          label="Delete Exchange Rate"
+          variant="danger"
+          onClick={handleDelete}
         />
         
       </div>

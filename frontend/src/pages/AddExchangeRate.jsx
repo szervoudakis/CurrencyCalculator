@@ -77,11 +77,18 @@ export default function AddExchangeRate() {
       setMessage({ text: "Exchange rate added successfully!", type: "success" });
       setTimeout(() => navigate("/exchange-rates"), 1000);
     } catch (err) {
-      console.error("Error adding exchange rate:", err);
-      setMessage({
-        text: "Failed to add exchange rate. Please check your data.",
-        type: "error",
-      });
+      console.error("Error adding exchange rate:");
+      if(err.response && err.response.status===409) {
+        setMessage({
+          text: "This exchange rate already exists.  Please try with other currencies",
+          type: "error",
+        });
+      }else{
+        setMessage({
+            text: "Failed to add exchange rate. Please try again later.",
+            type: "error",
+        });
+      }
     }
   };
 
