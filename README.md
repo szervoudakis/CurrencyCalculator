@@ -72,5 +72,3 @@ docker exec -it react_frontend bash
 npm install
 
 -------------------------------------------------------------------
-
-

@@ -21,10 +21,6 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Working
 WORKDIR /var/www/html
 
-# Αντιγραφή project αρχείων (μόνο αν δεν γίνεται mount με volume)
-# COPY ./app /var/www/html
-
-# Κατά προτίμηση: διατήρηση permissions
 RUN chown -R www-data:www-data /var/www/html
 
 CMD ["php-fpm"]
