@@ -1,7 +1,7 @@
 // src/components/Message.jsx
 import React from "react";
 import styles from "../styles/Message.module.css";
-
+//message component to inform users the result of actions
 const Message = ({ type = "success", text }) => {
   if (!text) return null;
 

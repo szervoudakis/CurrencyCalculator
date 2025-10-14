@@ -91,11 +91,7 @@ export default function AddExchangeRate() {
       <div style={{ maxWidth: "500px", margin: "0 auto" }}>
         <Message type={message.type} text={message.text} />
         <Form fields={fields} mode="add" onSubmit={handleAddRate} />
-        <Button
-          label="⬅ Back to Home"
-          variant="success"
-          onClick={() => navigate("/home")}
-        />
+        <Button label="⬅ Back to Home" variant="success" onClick={() => navigate("/home")}/>
       </div>
     </div>
   );

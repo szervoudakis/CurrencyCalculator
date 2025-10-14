@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../styles/Home.module.css"; 
 import  Button  from "./Button.jsx";
-
+//reusable component NavBar , because we want to use navigation bar in multiple pages
 function Navbar({ user, logout }) {
   return (
     <nav className={styles.navbar}>

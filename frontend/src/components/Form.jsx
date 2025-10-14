@@ -41,6 +41,7 @@ export default function Form({ fields = [], mode = "add", onSubmit }) {
               ))}
             </select>
           ) : (
+            /*if field is text*/
             <input
               type={field.type || "text"}
               step={field.step || ""} 
@@ -60,13 +61,13 @@ export default function Form({ fields = [], mode = "add", onSubmit }) {
               }`}
             />
           )}
-
+           
           {errors[field.name] && (
             <p className={styles.error}>{errors[field.name].message}</p>
           )}
         </div>
       ))}
-
+      {/* button with add or update label ,and diffrent variants (we use the same form and button for different actions Edit, Add) */}
       <Button
         type="submit"
         label={mode === "add" ? "Add" : "Update"}

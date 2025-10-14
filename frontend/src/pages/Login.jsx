@@ -20,6 +20,7 @@ export default function Login() {
     setMessage({ text: "", type: "" });
     try {
       const data = await loginUser(username, password);
+      setPassword(''); // clear sensitive state immediately
       if (!data.token) {
         setMessage({ text: "Invalid response from server", type: "error" });
         return;
@@ -27,6 +28,7 @@ export default function Login() {
       login(data.token, { username });
       setTimeout(() => navigate("/home"), 800);
     } catch {
+      setPassword('');
       setMessage({ text: "Invalid credentials", type: "error" });
     }
   };
