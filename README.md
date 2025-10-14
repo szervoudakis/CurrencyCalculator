@@ -48,22 +48,30 @@ It allows users to register, log in, and manage currencies and exchange rates se
 
 git clone https://github.com/your-username/currency-calculator.git
 cd currency-calculator
+
 ------------------------------------------------------------------
+
 ###  2️⃣ Start Docker containers
 
 docker compose up --build
+
 ------------------------------------------------------------------
 ###  3️⃣ Backend setup
 
 docker exec -it symfony_php bash
 composer install
 php bin/console doctrine:migrations:migrate
+
 -------------------------------------------------------------------
 ###  4️⃣ Frontend setup
+
 docker exec -it react_frontend bash
 npm install
 
-🧩 API Overview
+-------------------------------------------------------------------
+
+### 🧩 API Overview
+
 Endpoint	Method	Description	Auth Required
 /api/login	POST	User login	❌
 /api/register	POST	User registration	❌
@@ -71,12 +79,13 @@ Endpoint	Method	Description	Auth Required
 /api/currencies	POST	Create currency	✅
 /api/exchange-rates	GET	List exchange rates	✅
 /api/convert	GET	Convert currency	✅
-👤 Authentication
+
+### 👤 Authentication
 
 The API uses JWT tokens.
 After logging in, the token is stored in the browser and automatically attached to protected requests.
 
-🧪 Testing
+### 🧪 Testing
 
 Run backend tests with:
 
