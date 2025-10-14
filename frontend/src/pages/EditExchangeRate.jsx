@@ -6,6 +6,7 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import Message from "../components/Message.jsx";
 import Button from "../components/Button.jsx";
+import { getExchangeRateById, updateExchangeRate } from "../services/exchangeRateService.jsx";
 
 export default function EditExchangeRate() {
   const { token, user, logout } = useContext(AuthContext);
@@ -16,15 +17,12 @@ export default function EditExchangeRate() {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [loading, setLoading] = useState(true);
   
-  // get exchange rate
+  //get exchange rate by id
   useEffect(() => {
     const fetchExchangeRate = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/exchange-rates/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setExchangeRate(res.data);
-        console.log(res.data);
+        const data = await getExchangeRateById(id,token);
+        setExchangeRate(data);
       } catch (err) {
         console.error("Error fetching exchange rate:", err);
         setMessage({ text: "Failed to load exchange rate.", type: "error" });
@@ -35,14 +33,10 @@ export default function EditExchangeRate() {
     fetchExchangeRate();
   }, [id, token]);
 
-  // update rate
+  // update rate function
   const handleUpdate = async (data) => {
     try {
-      await axios.put(
-        `http://localhost:8080/api/exchange-rates/${id}`,
-        { rate: parseFloat(data.rate) },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await updateExchangeRate(id,data,token);
       setMessage({ text: "Exchange rate updated successfully!", type: "success" });
       setTimeout(() => navigate("/exchange-rates"), 1200);
     } catch (err) {

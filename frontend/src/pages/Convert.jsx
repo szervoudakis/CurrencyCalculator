@@ -6,6 +6,7 @@ import Button from "../components/Button.jsx";
 import Message from "../components/Message.jsx"; //message component
 import styles from "../styles/Form.module.css"; // styling reuse
 import {useNavigate} from "react-router-dom";
+import { getCurrencies } from "../services/currencyService.jsx";
 
 export default function Convert() {
   const { user, logout, token } = useContext(AuthContext);
@@ -21,10 +22,8 @@ export default function Convert() {
   useEffect(() => {
     const fetchCurrencies = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/currencies", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCurrencies(res.data.data);
+        const res = await getCurrencies(token);
+        setCurrencies(res.data);
       } catch (err) {
         console.error("Error fetching currencies:", err);
         setMessage({ text: "Failed to load currencies.", type: "error" });

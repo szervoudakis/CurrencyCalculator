@@ -6,30 +6,15 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message.jsx";
 import Button from "../components/Button.jsx";
+import { getCurrencies } from "../services/currencyService.jsx";
+import { createExchangeRate } from "../services/exchangeRateService.jsx";
 
 export default function AddExchangeRate() {
   const { token, user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [currencies, setCurrencies] = useState([]);
   const [message, setMessage] = useState({ text: "", type: "" });
-
-  // 🔹 Φέρνουμε τα currencies για να τα βάλουμε στα dropdowns
-  useEffect(() => {
-    const fetchCurrencies = async () => {
-      try {
-        const res = await axios.get("http://localhost:8080/api/currencies", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCurrencies(res.data.data);
-      } catch (err) {
-        console.error("Error fetching currencies:", err);
-        setMessage({ text: "Failed to load currencies", type: "error" });
-      }
-    };
-    fetchCurrencies();
-  }, [token]);
-
-  // 🔹 Ορισμός πεδίων φόρμας
+  // create fields for the Form component
   const fields = [
     {
       name: "baseCurrency",
@@ -61,7 +46,22 @@ export default function AddExchangeRate() {
     },
   ];
 
-  // 🔹 Handle Submit
+  useEffect(() => {
+    //fetch all currencies for dropdown lists
+    const fetchCurrencies = async () => {
+      try {
+        const res = await getCurrencies(token);
+        setCurrencies(res.data);
+      } catch (err) {
+        console.error("Error fetching currencies:", err);
+        setMessage({ text: "Failed to load currencies", type: "error" });
+      }
+    };
+    fetchCurrencies();
+  }, [token]);
+
+  
+  // Handle Submit New Rate
   const handleAddRate = async (data) => {
     if (data.baseCurrency === data.targetCurrency) {
       setMessage({
@@ -72,18 +72,7 @@ export default function AddExchangeRate() {
     }
 
     try {
-      await axios.post(
-        "http://localhost:8080/api/exchange-rates",
-        {
-          baseCurrency: parseInt(data.baseCurrency),
-          targetCurrency: parseInt(data.targetCurrency),
-          rate: parseFloat(data.rate),
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
+      await createExchangeRate(data,token);
       setMessage({ text: "Exchange rate added successfully!", type: "success" });
       setTimeout(() => navigate("/exchange-rates"), 1000);
     } catch (err) {
