@@ -14,7 +14,7 @@ export default function AddExchangeRate() {
   const navigate = useNavigate();
   const [currencies, setCurrencies] = useState([]);
   const [message, setMessage] = useState({ text: "", type: "" });
-  // create fields for the Form component
+  //create fields for the Form component
   const fields = [
     {
       name: "baseCurrency",
@@ -51,11 +51,15 @@ export default function AddExchangeRate() {
     //fetch all currencies for dropdown lists
     const fetchCurrencies = async () => {
       try {
-        const res = await getCurrencies(token);
+        const res = await getCurrencies(token,1,1000);  //we want all the available currencies
         setCurrencies(res.data);
       } catch (err) {
         console.error("Error fetching currencies:", err);
         setMessage({ text: "Failed to load currencies", type: "error" });
+        if (err.response && err.response.status === 401) {
+          logout(); // logout if token is expired
+          navigate("/"); // navigate to login
+        }
       }
     };
     fetchCurrencies();

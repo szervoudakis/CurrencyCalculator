@@ -25,6 +25,10 @@ export default function AddCurrency() {
     } catch (err) {
       console.error("Error adding currency:", err);
       setMessage({text:"Failed to add currency.", type: "error"});
+      if (err.response && err.response.status === 401) {
+        logout(); // logout if token is expired
+        navigate("/"); // navigate to login
+      }
     }
   };
 

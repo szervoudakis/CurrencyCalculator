@@ -2,14 +2,16 @@
 import React from "react";
 import styles from "../styles/Button.module.css";
 //this component is Button, which takes variant as a value used for different styles
-const Button = ({ type = "button", label, onClick, variant = "primary" }) => {
+const Button = ({ type = "button", label, onClick, variant = "primary", disabled}) => {
   return (
     <button
       type={type}
       className={`${styles.btn} ${styles[variant]} mt-3`}
       onClick={onClick}
+      disabled={disabled}
     >
       {label}
+      
     </button>
   );
 };

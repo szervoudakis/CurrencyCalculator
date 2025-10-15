@@ -7,7 +7,7 @@
 
 .table {
   border-collapse: collapse;
-  width: 80%;
+  width: 102%;
   background: white;
   border-radius: 10px;
   overflow: hidden;
@@ -17,7 +17,7 @@
 th {
   background-color: #0078ff;
   color: white;
-  text-align: left;
+  text-align: center;
   padding: 12px;
   font-weight: 600;
 }

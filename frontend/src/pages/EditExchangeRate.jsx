@@ -26,6 +26,10 @@ export default function EditExchangeRate() {
       } catch (err) {
         console.error("Error fetching exchange rate:", err);
         setMessage({ text: "Failed to load exchange rate.", type: "error" });
+        if (err.response && err.response.status === 401) {
+          logout(); // logout if token is expired
+          navigate("/"); // navigate to login
+        }
       } finally {
         setLoading(false);
       }

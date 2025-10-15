@@ -10,8 +10,8 @@ export async function addCurrency(data,token){
 }
 
 //get all currencies
-export async function getCurrencies(token){
-  const response = await api.get("/currencies", {
+export async function getCurrencies(token,page = 1, limit = 10){
+  const response = await api.get(`/currencies?page=${page}&limit=${limit}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   

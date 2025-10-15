@@ -27,6 +27,10 @@ export default function Convert() {
       } catch (err) {
         console.error("Error fetching currencies:", err);
         setMessage({ text: "Failed to load currencies.", type: "error" });
+        if (err.response && err.response.status === 401) {
+          logout(); // logout if token is expired
+          navigate("/"); // navigate to login
+        }
       }
     };
     fetchCurrencies();

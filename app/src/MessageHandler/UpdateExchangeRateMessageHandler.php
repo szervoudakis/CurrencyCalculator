@@ -18,7 +18,7 @@ class UpdateExchangeRateMessageHandler
 
     /**
      * This method is automatically executed by symfony messenger
-     * when an UpdateExhangeRateMessage is dispatchedx
+     * when an UpdateExhangeRateMessage is dispatchedd
      * It fetches the exchange rate entity by id, updates its rate
      * after that, triggers ExchangeRateService to persist the change
      */
