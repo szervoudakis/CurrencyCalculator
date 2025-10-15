@@ -48,7 +48,7 @@ It allows users to register, log in, and manage currencies and exchange rates se
 
 git clone https://github.com/szervoudakis/CurrencyCalculator.git
 
-cd currency-calculator
+cd CurrencyCalculator
 
 ------------------------------------------------------------------
 
