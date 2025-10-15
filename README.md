@@ -72,3 +72,12 @@ docker exec -it react_frontend bash
 npm install
 
 -------------------------------------------------------------------
+
+📘 Note about the Database
+The database starts empty after the initial setup.  
+You can add sample data manually using the API or the frontend interface.  
+
+For example:
+1️⃣ Login via the UI to get a JWT token.
+2️⃣ Use the **Add Currency** and **Add Exchange Rate** pages to insert data.
+3️⃣ After that, you can use the **Convert** feature normally.

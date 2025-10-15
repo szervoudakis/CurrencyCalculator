@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
 
     if (savedToken) {
       setToken(savedToken);
-
       try {
         setUser(savedUser ? JSON.parse(savedUser) : { username: "User" });
       } catch (e) {

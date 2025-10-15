@@ -19,10 +19,10 @@ class CurrencyControllerTest extends WebTestCase
 
         
         $container = static::getContainer();
-
+        $randomNum = rand(1000, 9999);
         //create fake user
         $user = new User();
-        $user->setUsername('testuser2');
+        $user->setUsername('testuser'.$randomNum);
         $user->setPassword('password');
 
         $em = $container->get('doctrine')->getManager();
