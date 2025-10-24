@@ -17,7 +17,6 @@ class CurrencyControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        
         $container = static::getContainer();
         $randomNum = rand(1000, 9999);
         //create fake user

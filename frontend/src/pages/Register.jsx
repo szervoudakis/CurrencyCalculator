@@ -20,7 +20,7 @@ export default function Register() {
     }
 
     try {
-      const data = registerUser(username, password);
+      const data = await registerUser(username, password);
       setMessage({ text: "Registration successful!", type: "success" });
       setTimeout(() => {
         window.location.href = "/";
