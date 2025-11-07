@@ -1,6 +1,5 @@
 import api from "../api/api.js"; 
 
-
 //create currency
 export async function addCurrency(data,token){
     const response = await api.post("/currencies", data, {

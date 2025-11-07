@@ -40,7 +40,7 @@ export async function deleteExchangeRate(id, token) {
   return response.data;
 }
 
-// 🔹 Convert currency (public endpoint)
+//Convert currency (public endpoint)
 export async function convertCurrency(from, to, amount) {
   const response = await api.get(`/convert?from=${from}&to=${to}&amount=${amount}`);
   return response.data;

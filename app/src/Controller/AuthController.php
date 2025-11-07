@@ -24,7 +24,7 @@ class AuthController extends AbstractController
     }
 
     #[Route('/api/register', name: 'api_register' , methods: ['POST'])]
-    public function register( Request $request,EntityManagerInterface $em,UserPasswordHasherInterface $passwordHasher) : JsonResponse 
+    public function register(Request $request,EntityManagerInterface $em,UserPasswordHasherInterface $passwordHasher) : JsonResponse 
     {
         $data = json_decode($request->getContent(),true);
         
@@ -39,7 +39,7 @@ class AuthController extends AbstractController
         //if user already exist send json message
         $existing = $em->getRepository(User::class)->findOneBy(['username' => $username]);
         if($existing){
-        return $this->json(['error' => 'User already exist in db!!'], 400);
+            return $this->json(['error' => 'User already exist in db!!'], 400);
         }
         
         //create user inst

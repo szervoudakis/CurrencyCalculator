@@ -72,9 +72,8 @@ class ExchangeRateService
         $this->em->remove($exchangeRate);
         $this->em->flush();
         //clear cache because we have new version of exchange rates
-         $this->cache->clear();
+        $this->cache->clear();
     }
 
     
-
 }

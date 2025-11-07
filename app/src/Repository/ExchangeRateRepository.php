@@ -77,5 +77,4 @@ class ExchangeRateRepository extends ServiceEntityRepository
     }
 
     
-
 }
