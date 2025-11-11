@@ -41,11 +41,11 @@ export default function EditExchangeRate() {
   const handleUpdate = async (data) => {
     try {
       await updateExchangeRate(id,data,token);
-      setMessage({ text: "Exchange rate updated successfully!", type: "success" });
+      setMessage({ text: "Exchange rate updated successfully", type: "success" });
       setTimeout(() => navigate("/exchange-rates"), 1200);
     } catch (err) {
       console.error("Error updating exchange rate:", err);
-      setMessage({ text: "Failed to update exchange rate.", type: "error" });
+      setMessage({ text: "Error:Failed to update exchange rate", type: "error" });
     }
   };
 
